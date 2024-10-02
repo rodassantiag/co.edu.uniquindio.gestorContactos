@@ -21,21 +21,26 @@ public class GestorContactos implements ServiciosGestorContactos {
 
     @Override
     public Contacto agregarContacto(Image imagen, String nombre, String apellido, String email, String telefono,
-                                    LocalDate fechaNacimiento) throws Exception{
+                                    LocalDate fechaNacimiento) throws Exception {
 
-        if (nombre.isBlank()){
+        if (nombre.isBlank()) {
             throw new Exception("El nombre es obligatorio");
         }
 
-        if (obtenerContactoPorNombre(nombre,apellido) != null){
+        if (obtenerContactoPorNombre(nombre, apellido) != null) {
             throw new Exception("Hay un contacto creado con el mismo nombre");
         }
 
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             throw new Exception("El email es obligatorio");
         }
 
-        if (telefono.isEmpty()){
+        String emailRegex = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        if (!email.matches(emailRegex)) {
+            throw new Exception("El formato del email es inválido");
+        }
+
+        if (telefono.isEmpty()) {
             throw new Exception("El telefono es obligatorio");
         }
 
@@ -43,15 +48,15 @@ public class GestorContactos implements ServiciosGestorContactos {
             throw new Exception("El número de teléfono es inválido");
         }
 
-        if (obtenerContacto(telefono) != null){
+        if (obtenerContacto(telefono) != null) {
             throw new Exception("Ya ha sido creado un contacto con el mismo número");
         }
 
-        if (fechaNacimiento == null){
-            throw new Exception("El fecha de nacimienrto es obligatorio");
+        if (fechaNacimiento == null) {
+            throw new Exception("El fecha de nacimiento es obligatorio");
         }
 
-        if (fechaNacimiento.isAfter(LocalDate.now())){
+        if (fechaNacimiento.isAfter(LocalDate.now())) {
             throw new Exception("La fecha de nacimiento no puede ser mayor a la fecha actual");
         }
 
@@ -67,8 +72,8 @@ public class GestorContactos implements ServiciosGestorContactos {
 
         contactos.add(contacto);
         return contacto;
-
     }
+
 
     public String generarId() {
         StringBuilder id = new StringBuilder();
